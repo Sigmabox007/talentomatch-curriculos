@@ -123,16 +123,13 @@ describe("listas excessivas são rejeitadas antes do Zod", () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it("lista enorme (100.000 itens) é rejeitada sem chegar ao Zod", () => {
+  it("lista enorme (30.000 itens inválidos) é rejeitada sem chegar ao Zod", () => {
     const spy = vi.spyOn(aiOutputSchema, "safeParse");
     const o = validOutput() as Record<string, unknown>;
-    o.keywords = Array(100_000).fill(1); // itens inválidos também: o Zod geraria 100.000 erros
+    o.keywords = Array(30_000).fill(1); // no Zod, cada item inválido geraria um erro
     const text = raw(o);
-    expect(text.length).toBeLessThan(L.rawChars * 3);
-    // Abaixo do limite total para isolar a verificação de lista.
-    const small = { ...o, keywords: Array(40_000).fill(1) };
-    const r = parseAiOutput(raw(small));
-    expect(r).toMatchObject({ ok: false, reason: "limits_exceeded", detail: "keywords" });
+    expect(text.length).toBeLessThanOrEqual(L.rawChars); // isola a verificação de lista
+    expect(parseAiOutput(text)).toEqual({ ok: false, reason: "limits_exceeded", detail: "keywords" });
     expect(spy).not.toHaveBeenCalled();
   });
 });
