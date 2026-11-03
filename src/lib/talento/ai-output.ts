@@ -59,8 +59,9 @@ function firstOversizedList(obj: Record<string, unknown>): string | null {
  * Qualquer excesso rejeita a resposta inteira — nada é cortado.
  */
 export function parseAiOutput(raw: string | undefined | null): AiOutputParse {
-  if (!raw || raw.trim() === "") return { ok: false, reason: "empty" };
+  if (!raw) return { ok: false, reason: "empty" };
   if (raw.length > L.rawChars) return { ok: false, reason: "too_large" };
+  if (raw.trim() === "") return { ok: false, reason: "empty" };
 
   let json: unknown;
   try {

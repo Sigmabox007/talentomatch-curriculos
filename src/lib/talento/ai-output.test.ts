@@ -138,11 +138,12 @@ describe("respostas malformadas são rejeitadas", () => {
   it("vazia", () => {
     expect(parseAiOutput("")).toEqual({ ok: false, reason: "empty" });
     expect(parseAiOutput(undefined)).toEqual({ ok: false, reason: "empty" });
+    expect(parseAiOutput("   ")).toEqual({ ok: false, reason: "empty" });
   });
 
   it("texto acima de 80.000 caracteres, antes de interpretar o JSON", () => {
     const parse = vi.spyOn(JSON, "parse");
-    const r = parseAiOutput(" ".repeat(L.rawChars + 1));
+    const r = parseAiOutput(`{"job_title":"${"x".repeat(L.rawChars)}"}`);
     expect(r).toEqual({ ok: false, reason: "too_large" });
     expect(parse).not.toHaveBeenCalled();
   });
