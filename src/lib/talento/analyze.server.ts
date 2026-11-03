@@ -54,7 +54,8 @@ function friendlyGatewayError(err: unknown): AnalyzeResponse {
       ok: false,
       error: {
         code: "ai_rate_limited",
-        message: "O serviço de IA está com muita demanda agora. Aguarde um minuto e tente novamente.",
+        message:
+          "O serviço de IA está com muita demanda agora. Aguarde um minuto e tente novamente.",
         retryable: true,
       },
     };
@@ -83,7 +84,8 @@ function friendlyGatewayError(err: unknown): AnalyzeResponse {
     ok: false,
     error: {
       code: "ai_error",
-      message: "Não foi possível concluir a análise agora. Nenhum resultado foi gerado. Tente novamente.",
+      message:
+        "Não foi possível concluir a análise agora. Nenhum resultado foi gerado. Tente novamente.",
       retryable: true,
     },
   };
@@ -134,7 +136,10 @@ export async function runAnalysis(job: string, resume: string): Promise<AnalyzeR
   const parsed = parseAiOutput(raw);
   if (!parsed.ok) {
     // Só o código do motivo (e o caminho da lista, quando houver); nunca o conteúdo.
-    console.error("[analyze] model output rejected", { reason: parsed.reason, detail: parsed.detail });
+    console.error("[analyze] model output rejected", {
+      reason: parsed.reason,
+      detail: parsed.detail,
+    });
     return friendlyGatewayError(null);
   }
 

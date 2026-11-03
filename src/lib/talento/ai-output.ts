@@ -3,16 +3,10 @@ import { aiOutputSchema, type AiOutput } from "./schema";
 
 /** Motivo da rejeição (só o código é registrado em log, nunca o conteúdo). */
 export type AiOutputRejection =
-  | "empty"
-  | "too_large"
-  | "invalid_json"
-  | "not_object"
-  | "limits_exceeded"
-  | "schema_invalid";
+  "empty" | "too_large" | "invalid_json" | "not_object" | "limits_exceeded" | "schema_invalid";
 
 export type AiOutputParse =
-  | { ok: true; data: AiOutput }
-  | { ok: false; reason: AiOutputRejection; detail?: string };
+  { ok: true; data: AiOutput } | { ok: false; reason: AiOutputRejection; detail?: string };
 
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null && !Array.isArray(v);
@@ -31,12 +25,12 @@ function firstOversizedList(obj: Record<string, unknown>): string | null {
     if (Array.isArray(v) && v.length > max) return key;
   }
 
-  const resume = obj.resume;
+  const resume = obj["resume"];
   if (!isRecord(resume)) return null; // formato errado: o Zod rejeita adiante
-  if (Array.isArray(resume.contact_lines) && resume.contact_lines.length > L.contactLines) {
+  if (Array.isArray(resume["contact_lines"]) && resume["contact_lines"].length > L.contactLines) {
     return "resume.contact_lines";
   }
-  const sections = resume.sections;
+  const sections = resume["sections"];
   if (!Array.isArray(sections)) return null;
   if (sections.length > L.sections) return "resume.sections";
 
@@ -44,9 +38,10 @@ function firstOversizedList(obj: Record<string, unknown>): string | null {
   let totalBlocks = 0;
   for (let i = 0; i < sections.length; i++) {
     const s = sections[i];
-    if (!isRecord(s) || !Array.isArray(s.blocks)) continue;
-    if (s.blocks.length > L.blocksPerSection) return `resume.sections[${i}].blocks`;
-    totalBlocks += s.blocks.length;
+    const blocks = isRecord(s) ? s["blocks"] : undefined;
+    if (!Array.isArray(blocks)) continue;
+    if (blocks.length > L.blocksPerSection) return `resume.sections[${i}].blocks`;
+    totalBlocks += blocks.length;
     if (totalBlocks > L.totalBlocks) return "resume.sections[*].blocks (total)";
   }
   return null;
