@@ -64,7 +64,7 @@ Peso 2 para requisito obrigatório, 1 para desejável e 1 para requisito sem ind
 - A verificação de palavras-chave é literal: sinônimos (ex.: "Técnica de Suporte" × "suporte técnico") aparecem como não encontrados.
 - O PDF usa fontes padrão (Latin-1): emojis e símbolos raros são removidos na exportação.
 - Não implementado nesta versão (fora do escopo): login, histórico, banco de currículos, upload de PDF/DOCX, exportação DOCX, integrações.
-- - **Alertas de dependências:** permanecem dois avisos conhecidos: Zod 3 (alto) e minimatch transitivo (moderado). Foram aplicadas medidas para reduzir a exposição ao problema do Zod, mas isso não elimina o alerta da versão instalada. Ambos continuam exigindo acompanhamento.
+- **Alertas de dependências:** permanecem dois avisos conhecidos: Zod 3 (alto) e minimatch transitivo (moderado). Foram aplicadas medidas para reduzir a exposição ao problema do Zod, mas isso não elimina o alerta da versão instalada. Ambos continuam exigindo acompanhamento.
 - **Limite de consumo de IA:** foi configurado no Lovable um limite mensal de 2 créditos de IA para este projeto, com pausa automática ao atingir o limite. Pode ocorrer pequeno consumo adicional antes do bloqueio.
 - **Teste após publicação:** foi confirmado o acesso público à página inicial. Uma nova análise completa em produção ainda não foi executada após a publicação.
 
