@@ -1,50 +1,60 @@
 import { z } from "zod";
 
-import { MAX_KEYWORDS, MAX_REQUIREMENTS } from "./constants";
+import { AI_OUTPUT_LIMITS as L } from "./constants";
 
-const str = (max: number) => z.string().transform((s) => s.trim().slice(0, max));
+/** Texto com tamanho máximo: acima do limite é rejeitado (nunca cortado); espaços nas pontas são removidos. */
+const str = (max: number) =>
+  z
+    .string()
+    .max(max)
+    .transform((s) => s.trim());
 
-/** Esquema validado da resposta da IA (dados não confiáveis até passar por aqui). */
+/**
+ * Esquema validado da resposta da IA (dados não confiáveis até passar por aqui).
+ * Os tamanhos das listas são verificados antes, em `ai-output.ts`; os `.max()` abaixo
+ * repetem os mesmos limites como segunda barreira.
+ */
 export const aiOutputSchema = z.object({
-  job_title: z.string().max(300).nullable(),
+  job_title: z.string().max(L.text.jobTitle).nullable(),
   extraction_confidence: z.enum(["alta", "media", "baixa"]),
   injection_detected: z.boolean(),
   requirements: z
     .array(
       z.object({
-        requirement: str(300),
+        requirement: str(L.text.requirement),
         category: z.enum(["obrigatorio", "desejavel", "nao_especificado"]),
         status: z.enum(["identificado", "nao_identificado", "revisar"]),
         evidence: z
           .string()
+          .max(L.text.evidence)
           .nullable()
-          .transform((s) => (s ? s.trim().slice(0, 400) : null)),
-        note: str(500),
+          .transform((s) => (s ? s.trim() : null)),
+        note: str(L.text.note),
       }),
     )
-    .transform((a) => a.slice(0, MAX_REQUIREMENTS * 2)),
-  keywords: z.array(str(60)).transform((a) => a.slice(0, MAX_KEYWORDS * 2)),
-  recommendations: z.array(str(500)).transform((a) => a.slice(0, 10)),
+    .max(L.requirements),
+  keywords: z.array(str(L.text.keyword)).max(L.keywords),
+  recommendations: z.array(str(L.text.recommendation)).max(L.recommendations),
   resume: z.object({
-    full_name: z.string().max(200).nullable(),
-    contact_lines: z.array(str(300)).transform((a) => a.slice(0, 6)),
+    full_name: z.string().max(L.text.fullName).nullable(),
+    contact_lines: z.array(str(L.text.contactLine)).max(L.contactLines),
     sections: z
       .array(
         z.object({
-          title: str(80),
+          title: str(L.text.sectionTitle),
           blocks: z
             .array(
               z.object({
                 kind: z.enum(["subheading", "paragraph", "bullet"]),
-                text: str(1500),
+                text: str(L.text.block),
               }),
             )
-            .transform((a) => a.slice(0, 80)),
+            .max(L.blocksPerSection),
         }),
       )
-      .transform((a) => a.slice(0, 15)),
+      .max(L.sections),
   }),
-  rewrite_notes: z.array(str(400)).transform((a) => a.slice(0, 10)),
+  rewrite_notes: z.array(str(L.text.rewriteNote)).max(L.rewriteNotes),
 });
 
 export type AiOutput = z.infer<typeof aiOutputSchema>;

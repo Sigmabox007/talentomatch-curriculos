@@ -8,6 +8,38 @@ export const HARD_PAYLOAD_LIMIT = 20_000;
 export const MAX_REQUIREMENTS = 25;
 export const MAX_KEYWORDS = 30;
 
+/**
+ * Limites da resposta da IA, verificados ANTES do Zod. Respostas acima deles são
+ * rejeitadas por inteiro (nunca cortadas). As instruções pedem no máximo 20 requisitos,
+ * 20 palavras-chave e 6 recomendações; os limites deixam folga sobre esse formato real.
+ */
+export const AI_OUTPUT_LIMITS = {
+  /** Tamanho total do texto bruto antes de interpretar o JSON (16.000 tokens de saída cabem com folga). */
+  rawChars: 80_000,
+  requirements: MAX_REQUIREMENTS,
+  keywords: MAX_KEYWORDS,
+  recommendations: 10,
+  rewriteNotes: 20,
+  contactLines: 10,
+  sections: 20,
+  blocksPerSection: 150,
+  totalBlocks: 400,
+  /** Tamanho máximo de cada texto (caracteres). */
+  text: {
+    jobTitle: 300,
+    requirement: 500,
+    evidence: 600,
+    note: 1000,
+    keyword: 120,
+    recommendation: 1000,
+    rewriteNote: 600,
+    fullName: 200,
+    contactLine: 300,
+    sectionTitle: 120,
+    block: 6000,
+  },
+} as const;
+
 export const WEIGHTS = {
   obrigatorio: 2,
   desejavel: 1,

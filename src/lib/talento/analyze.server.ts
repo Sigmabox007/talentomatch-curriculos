@@ -7,9 +7,10 @@ import {
   generateResponse,
 } from "@lovable.dev/ai-gateway";
 
+import { parseAiOutput } from "./ai-output";
 import { classifyKeywords, computeScore, dedupeRequirements, verifyRequirement } from "./scoring";
 import { composeResumeText } from "./resume-format";
-import { AI_JSON_SCHEMA, aiOutputSchema, type AnalysisResult, type AnalyzeResponse } from "./schema";
+import { AI_JSON_SCHEMA, type AnalysisResult, type AnalyzeResponse } from "./schema";
 
 const MODEL = "openai/gpt-6-astra" as const;
 
@@ -130,21 +131,10 @@ export async function runAnalysis(job: string, resume: string): Promise<AnalyzeR
     return friendlyGatewayError(err);
   }
 
-  if (!raw) {
-    console.error("[analyze] empty model output");
-    return friendlyGatewayError(null);
-  }
-
-  let parsedJson: unknown;
-  try {
-    parsedJson = JSON.parse(raw);
-  } catch {
-    console.error("[analyze] invalid JSON from model");
-    return friendlyGatewayError(null);
-  }
-  const parsed = aiOutputSchema.safeParse(parsedJson);
-  if (!parsed.success) {
-    console.error("[analyze] schema validation failed", { issues: parsed.error.issues.length });
+  const parsed = parseAiOutput(raw);
+  if (!parsed.ok) {
+    // Só o código do motivo (e o caminho da lista, quando houver); nunca o conteúdo.
+    console.error("[analyze] model output rejected", { reason: parsed.reason, detail: parsed.detail });
     return friendlyGatewayError(null);
   }
 
