@@ -4,7 +4,7 @@
 
 Projeto do desafio DIO, construído com o Lovable. Aplicativo web responsivo, em português do Brasil, que compara o texto de um currículo com o texto de uma vaga, mostra uma análise explicável de alinhamento e propõe uma versão do currículo mais clara e adequada à vaga — **sem inventar fatos**. A pessoa revisa e edita a proposta antes de exportá-la em PDF.
 
-- **URL publicada:** _a preencher após a publicação_
+- **URL publicada:** https://talentomatch-curriculos.lovable.app
 - **Especificação inicial (v1):** [`docs/especificacao-inicial-v1.md`](docs/especificacao-inicial-v1.md)
 
 ## Problema
@@ -64,10 +64,18 @@ Peso 2 para requisito obrigatório, 1 para desejável e 1 para requisito sem ind
 - A verificação de palavras-chave é literal: sinônimos (ex.: "Técnica de Suporte" × "suporte técnico") aparecem como não encontrados.
 - O PDF usa fontes padrão (Latin-1): emojis e símbolos raros são removidos na exportação.
 - Não implementado nesta versão (fora do escopo): login, histórico, banco de currículos, upload de PDF/DOCX, exportação DOCX, integrações.
+- - **Alertas de dependências:** permanecem dois avisos conhecidos: Zod 3 (alto) e minimatch transitivo (moderado). Foram aplicadas medidas para reduzir a exposição ao problema do Zod, mas isso não elimina o alerta da versão instalada. Ambos continuam exigindo acompanhamento.
+- **Limite de consumo de IA:** foi configurado no Lovable um limite mensal de 2 créditos de IA para este projeto, com pausa automática ao atingir o limite. Pode ocorrer pequeno consumo adicional antes do bloqueio.
+- **Teste após publicação:** foi confirmado o acesso público à página inicial. Uma nova análise completa em produção ainda não foi executada após a publicação.
 
 ## Registro de mudanças
 
 - **v1 (03/11/2026)** — primeira geração a partir da especificação inicial. Ajuste após o primeiro teste: as instruções ao modelo passaram a pedir apenas requisitos de qualificação (não responsabilidades do cargo) e palavras-chave curtas e atômicas, porque a primeira execução listou responsabilidades como requisitos e frases longas como palavras-chave.
+- **Reforço de segurança (03/11/2026):** atualização pontual de dependências, reduzindo os alertas conhecidos de 13 para 2. Implementada validação preventiva das respostas da IA, com limites de tamanho e quantidade de itens antes da validação pelo Zod. Respostas inválidas ou excessivas passaram a ser recusadas integralmente.
+
+- **Segunda rodada de testes (03/11/2026):** segundo o relatório de validação do Lovable, 42 de 42 testes automatizados passaram. Compilação e verificação de tipos concluídas com sucesso. O fluxo completo foi novamente testado com dados fictícios, incluindo análise, edição, cópia do texto e exportação em PDF.
+
+- **Publicação (03/11/2026):** aplicativo publicado em https://talentomatch-curriculos.lovable.app. A página inicial foi aberta com sucesso em janela anônima, sem necessidade de autenticação.
 
 ## Desenvolvimento local
 
