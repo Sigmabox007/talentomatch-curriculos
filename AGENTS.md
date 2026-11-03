@@ -15,6 +15,7 @@
 - The alignment percentage is always computed in code from verified requirements, never taken from the AI. Why: the model's numbers are untrusted.
 - Every AI-cited evidence snippet is verified against the original resume; unverifiable "identified" items are downgraded. Why: no skill is shown as proven without a real quote.
 - Exactly one AI call per "Analisar" click, through `analyze.functions.ts` → `analyze.server.ts` (AI Gateway SDK, strict JSON schema + Zod). Why: cost control and a single validated contract.
+- AI output goes only through `parseAiOutput` (`ai-output.ts`): total size, JSON, then list lengths are checked before Zod, with limits in `AI_OUTPUT_LIMITS`; anything over a limit rejects the whole response, never truncates. Why: Zod 3 `.max()` still iterates every element, and silent cuts would hide data.
 - No persistence of user texts: no database, no localStorage/sessionStorage, no logging of content (log only error codes). Why: privacy promise of the MVP.
 - Input limits are shared via `validation.ts` and re-checked on the server. Why: client checks are bypassable.
 - PDF export uses jsPDF with standard fonts, built from the exact editor text via `parseResumeText`. Why: selectable, single-column, ATS-friendly output identical to what the user reviewed.
