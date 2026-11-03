@@ -14,7 +14,13 @@
     "test:watch": "vitest"
   },
   "overrides": {
-    "rolldown": "1.2.1"
+    "rolldown": "1.2.1",
+    "seroval": "1.6.11",
+    "source-map-js": "1.2.2",
+    "js-yaml": "4.3.2",
+    "@tanstack/router-generator": {
+      "zod": "4.6.7"
+    }
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
