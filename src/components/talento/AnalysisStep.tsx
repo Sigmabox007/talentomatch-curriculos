@@ -148,7 +148,7 @@ export function AnalysisStep({
       </div>
 
       {result.injectionDetected && (
-        <Alert variant="warning">
+        <Alert variant="warning" role="status">
           <ShieldAlert className="size-4" aria-hidden="true" />
           <AlertTitle className="font-semibold">Instruções ignoradas</AlertTitle>
           <AlertDescription>
@@ -231,7 +231,7 @@ export function AnalysisStep({
         </Card>
       )}
 
-      <Alert variant="info">
+      <Alert variant="info" role="note">
         <Info className="size-4" aria-hidden="true" />
         <AlertDescription>
           Requisitos não identificados não são acrescentados automaticamente ao currículo ajustado.

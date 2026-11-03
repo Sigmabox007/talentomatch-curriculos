@@ -12,4 +12,7 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Pre-bundle the PDF library so the first export in dev doesn't trigger a page reload
+  // (which would wipe the in-memory session state).
+  vite: { optimizeDeps: { include: ["jspdf"] } },
 });

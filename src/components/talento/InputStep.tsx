@@ -130,7 +130,7 @@ export function InputStep(p: InputStepProps) {
         />
       </div>
 
-      <Alert variant="info">
+      <Alert variant="info" role="note">
         <Info className="size-4" aria-hidden="true" />
         <AlertTitle className="font-semibold">Antes de enviar</AlertTitle>
         <AlertDescription className="space-y-2">
