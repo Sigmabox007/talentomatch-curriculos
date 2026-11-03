@@ -4,10 +4,10 @@ import { cn } from "@/lib/utils";
 
 export type StepId = 1 | 2 | 3;
 
-const STEPS: { id: StepId; label: string; short: string }[] = [
-  { id: 1, label: "Informar", short: "Vaga e currículo" },
-  { id: 2, label: "Analisar", short: "Alinhamento" },
-  { id: 3, label: "Revisar e exportar", short: "Currículo final" },
+const STEPS: { id: StepId; label: string; mobile: string; short: string }[] = [
+  { id: 1, label: "Informar", mobile: "Informar", short: "Vaga e currículo" },
+  { id: 2, label: "Analisar", mobile: "Analisar", short: "Alinhamento" },
+  { id: 3, label: "Revisar e exportar", mobile: "Revisar", short: "Currículo final" },
 ];
 
 export function Stepper({
@@ -57,7 +57,8 @@ export function Stepper({
                     )}
                   >
                     <span className="sr-only">Etapa {s.id}: </span>
-                    {s.label}
+                    <span className="sm:hidden">{s.mobile}</span>
+                    <span className="hidden sm:inline">{s.label}</span>
                   </span>
                   <span className="hidden truncate text-xs text-muted-foreground sm:block">
                     {s.short}
