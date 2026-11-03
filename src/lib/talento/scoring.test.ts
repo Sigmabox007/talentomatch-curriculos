@@ -109,7 +109,7 @@ describe("duplicados", () => {
       req({ text: "windows 10.", category: "obrigatorio" }),
     ]);
     expect(out).toHaveLength(1);
-    expect(out[0].category).toBe("obrigatorio");
+    expect(out[0]?.category).toBe("obrigatorio");
   });
 });
 

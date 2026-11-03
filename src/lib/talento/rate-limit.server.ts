@@ -16,7 +16,7 @@ export function checkRateLimit(clientKey: string): { ok: true } | { ok: false; r
   const list = (hits.get(clientKey) ?? []).filter((t) => now - t < WINDOW_MS);
 
   if (list.length >= PER_CLIENT || globalHits.length >= PER_INSTANCE) {
-    const oldest = list.length >= PER_CLIENT ? list[0] : globalHits[0];
+    const oldest = (list.length >= PER_CLIENT ? list[0] : globalHits[0]) ?? now;
     return { ok: false, retryAfterSec: Math.max(1, Math.ceil((WINDOW_MS - (now - oldest)) / 1000)) };
   }
   list.push(now);

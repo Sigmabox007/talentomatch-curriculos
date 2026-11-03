@@ -25,7 +25,7 @@ function TextField({
   placeholder: string;
   value: string;
   onChange: (v: string) => void;
-  error?: string;
+  error?: string | undefined;
   disabled?: boolean;
 }) {
   const id = useId();
@@ -78,7 +78,7 @@ export interface InputStepProps {
   resume: string;
   onJob: (v: string) => void;
   onResume: (v: string) => void;
-  errors: { job?: string; resume?: string };
+  errors: { job?: string | undefined; resume?: string | undefined };
   consent: boolean;
   onConsent: (v: boolean) => void;
   consentError: boolean;
